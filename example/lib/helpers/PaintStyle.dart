@@ -131,7 +131,7 @@ class PaintStyle {
   /// drawn but before it has been composited into the image.
   ///
   /// See [MaskFilter] for details.
-  final MaskFilter maskFilter;
+  final MaskFilter? maskFilter;
 
   /// Controls the performance vs quality trade-off to use when applying
   /// filters, such as [maskFilter], or when drawing images, as with
@@ -151,7 +151,7 @@ class PaintStyle {
   ///  * [ImageShader], a shader that tiles an [Image].
   ///  * [colorFilter], which overrides [shader].
   ///  * [color], which is used if [shader] and [colorFilter] are null.
-  final Shader shader;
+  final Shader? shader;
 
   /// A color filter to apply when a shape is drawn or when a layer is
   /// composited.
@@ -159,7 +159,7 @@ class PaintStyle {
   /// See [ColorFilter] for details.
   ///
   /// When a shape is being drawn, [colorFilter] overrides [color] and [shader].
-  final ColorFilter colorFilter;
+  final ColorFilter? colorFilter;
 
   /// Whether the colors of the image are inverted when drawn.
   ///
@@ -210,10 +210,7 @@ class PaintStyle {
       semicolon = '; ';
     }
     if (color != const Color(_kColorDefault)) {
-      if (color != null)
         result.write('$semicolon$color');
-      else
-        result.write('${semicolon}no color');
       semicolon = '; ';
     }
     if (blendMode.index != _kBlendModeDefault) {

@@ -16,6 +16,7 @@ class SelectBondedDevicePage extends StatefulWidget {
 }
 
 enum _DeviceAvailability {
+  // ignore: unused_field
   no,
   maybe,
   yes,
@@ -24,19 +25,19 @@ enum _DeviceAvailability {
 class _DeviceWithAvailability extends BluetoothDevice {
   BluetoothDevice device;
   _DeviceAvailability availability;
-  int rssi;
+  int? rssi;
 
   _DeviceWithAvailability(this.device, this.availability, [this.rssi]);
 }
 
 class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
-  List<_DeviceWithAvailability> devices = List<_DeviceWithAvailability>();
+  List<_DeviceWithAvailability> devices = [];
 
   // Availability
-  StreamSubscription<BluetoothDiscoveryResult> _discoveryStreamSubscription;
-  bool _isDiscovering;
+  StreamSubscription<BluetoothDiscoveryResult>? _discoveryStreamSubscription;
+  late bool _isDiscovering;
 
-  _SelectBondedDevicePage();
+ _SelectBondedDevicePage();
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
       });
     });
 
-    _discoveryStreamSubscription.onDone(() {
+    _discoveryStreamSubscription!.onDone(() {
       setState(() {
         _isDiscovering = false;
       });

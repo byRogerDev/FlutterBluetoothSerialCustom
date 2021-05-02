@@ -12,14 +12,14 @@ class BackgroundCollectedPage extends StatelessWidget {
 
     // Arguments shift is needed for timestamps as miliseconds in double could loose precision.
     final int argumentsShift =
-        task.samples.first.timestamp.millisecondsSinceEpoch;
+        task.samples.first.timestamp!.millisecondsSinceEpoch;
 
     final Duration showDuration =
         Duration(hours: 2); // @TODO . show duration should be configurable
     final Iterable<DataSample> lastSamples = task.getLastOf(showDuration);
 
     final Iterable<double> arguments = lastSamples.map((sample) {
-      return (sample.timestamp.millisecondsSinceEpoch - argumentsShift)
+      return (sample.timestamp!.millisecondsSinceEpoch - argumentsShift)
           .toDouble();
     });
 
@@ -28,20 +28,20 @@ class BackgroundCollectedPage extends StatelessWidget {
         Duration(minutes: 15); // @TODO . step duration should be configurable
 
     // Find first timestamp floored to step before
-    final DateTime beginningArguments = lastSamples.first.timestamp;
+    final DateTime beginningArguments = lastSamples.first.timestamp!;
     DateTime beginningArgumentsStep = DateTime(beginningArguments.year,
         beginningArguments.month, beginningArguments.day);
     while (beginningArgumentsStep.isBefore(beginningArguments)) {
       beginningArgumentsStep = beginningArgumentsStep.add(argumentsStep);
     }
     beginningArgumentsStep = beginningArgumentsStep.subtract(argumentsStep);
-    final DateTime endingArguments = lastSamples.last.timestamp;
+    final DateTime? endingArguments = lastSamples.last.timestamp;
 
     // Generate list of timestamps of labels
     final Iterable<DateTime> argumentsLabelsTimestamps = () sync* {
       DateTime timestamp = beginningArgumentsStep;
       yield timestamp;
-      while (timestamp.isBefore(endingArguments)) {
+      while (timestamp.isBefore(endingArguments!)) {
         timestamp = timestamp.add(argumentsStep);
         yield timestamp;
       }

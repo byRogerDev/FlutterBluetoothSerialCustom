@@ -15,9 +15,9 @@ class DiscoveryPage extends StatefulWidget {
 }
 
 class _DiscoveryPage extends State<DiscoveryPage> {
-  StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
-  List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
-  bool isDiscovering;
+  StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
+  List<BluetoothDiscoveryResult> results = [];
+  late bool isDiscovering;
 
   _DiscoveryPage();
 
@@ -48,7 +48,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
       });
     });
 
-    _streamSubscription.onDone(() {
+    _streamSubscription!.onDone(() {
       setState(() {
         isDiscovering = false;
       });
@@ -93,33 +93,33 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         itemBuilder: (BuildContext context, index) {
           BluetoothDiscoveryResult result = results[index];
           return BluetoothDeviceListEntry(
-            device: result.device,
+            device: result.device!,
             rssi: result.rssi,
             onTap: () {
               Navigator.of(context).pop(result.device);
             },
             onLongPress: () async {
               try {
-                bool bonded = false;
-                if (result.device.isBonded) {
-                  print('Unbonding from ${result.device.address}...');
+                bool? bonded = false;
+                if (result.device!.isBonded) {
+                  print('Unbonding from ${result.device!.address}...');
                   await FlutterBluetoothSerial.instance
-                      .removeDeviceBondWithAddress(result.device.address);
-                  print('Unbonding from ${result.device.address} has succed');
+                      .removeDeviceBondWithAddress(result.device!.address!);
+                  print('Unbonding from ${result.device!.address} has succed');
                 } else {
-                  print('Bonding with ${result.device.address}...');
-                  bonded = await FlutterBluetoothSerial.instance
-                      .bondDeviceAtAddress(result.device.address);
+                  print('Bonding with ${result.device!.address}...');
+                  bonded = await (FlutterBluetoothSerial.instance
+                      .bondDeviceAtAddress(result.device!.address!) as Future<bool>);
                   print(
-                      'Bonding with ${result.device.address} has ${bonded ? 'succed' : 'failed'}.');
+                      'Bonding with ${result.device!.address} has ${bonded ? 'succed' : 'failed'}.');
                 }
                 setState(() {
                   results[results.indexOf(result)] = BluetoothDiscoveryResult(
                       device: BluetoothDevice(
-                        name: result.device.name ?? '',
-                        address: result.device.address,
-                        type: result.device.type,
-                        bondState: bonded
+                        name: result.device!.name ?? '',
+                        address: result.device!.address,
+                        type: result.device!.type,
+                        bondState: bonded!
                             ? BluetoothBondState.bonded
                             : BluetoothBondState.none,
                       ),
@@ -133,7 +133,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                       title: const Text('Error occured while bonding'),
                       content: Text("${ex.toString()}"),
                       actions: <Widget>[
-                        new FlatButton(
+                        new TextButton (
                           child: new Text("Close"),
                           onPressed: () {
                             Navigator.of(context).pop();
